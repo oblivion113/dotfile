@@ -85,6 +85,13 @@ mode = "link"
 source = "skills/general/writing-docs"
 target = "~/.pi/agent/skills/writing-docs"
 
+[[entry]]
+name = "skill-konmari"
+platform = "all"
+mode = "link"
+source = "skills/general/konmari"
+target = "~/.pi/agent/skills/konmari"
+
 # --- neovim -----------------------------------------------------------------
 
 [[entry]]
