@@ -50,8 +50,9 @@ eval $(thefuck --alias)
 
 export PATH="/Library/TeX/texbin:$PATH"
 
-# API keys live in the git-ignored secret/ folder of the dotfiles repo
-[ -f "$HOME/code/dotfiles/secret/macos/keys.sh" ] && source "$HOME/code/dotfiles/secret/macos/keys.sh"
+# API keys live outside the repo in a stable XDG location; the repo's
+# git-ignored secret/ folder only holds a backup copy.
+[ -f "$HOME/.config/secrets/keys.sh" ] && source "$HOME/.config/secrets/keys.sh"
 
 # shared agents venv python as default (takes precedence over conda base)
 export PATH="$HOME/.agents/venv/bin:$PATH"
