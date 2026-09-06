@@ -1,0 +1,104 @@
+# Dotfiles sync manifest.
+#
+# Each [[entry]] maps one device file to one repo file:
+#   name     unique handle, used to select entries on the CLI
+#   platform macos | wsl | all   ("all" applies on every platform)
+#   mode     link | copy
+#     link — the device path is a symlink into the repo; the repo is the single
+#            source of truth and edits go live immediately
+#     copy — two real files; sync explicitly with `push` (device -> repo)
+#            or `pull` (repo -> device)
+#   source   path relative to the repo root; may go stale after restructuring,
+#            repair it with `sync.py refresh`
+#   target   absolute path on the device (~ is expanded); this is the stable
+#            identity of an entry — device locations rarely change
+
+# --- pi harness -------------------------------------------------------------
+
+[[entry]]
+name = "agents-md"
+platform = "macos"
+mode = "link"
+source = "sysprompt/macos/AGENTS.md"
+target = "~/.pi/agent/AGENTS.md"
+
+[[entry]]
+name = "skill-python-workflow"
+platform = "macos"
+mode = "link"
+source = "skills/macos/python-workflow"
+target = "~/.pi/agent/skills/python-workflow"
+
+[[entry]]
+name = "skill-blueprint"
+platform = "all"
+mode = "link"
+source = "skills/general/blueprint"
+target = "~/.pi/agent/skills/blueprint"
+
+[[entry]]
+name = "skill-creative-naming"
+platform = "all"
+mode = "link"
+source = "skills/general/creative-naming"
+target = "~/.pi/agent/skills/creative-naming"
+
+[[entry]]
+name = "skill-prospect"
+platform = "all"
+mode = "link"
+source = "skills/general/prospect"
+target = "~/.pi/agent/skills/prospect"
+
+[[entry]]
+name = "skill-teaching"
+platform = "all"
+mode = "link"
+source = "skills/general/teaching"
+target = "~/.pi/agent/skills/teaching"
+
+[[entry]]
+name = "skill-writing-docs"
+platform = "all"
+mode = "link"
+source = "skills/general/writing-docs"
+target = "~/.pi/agent/skills/writing-docs"
+
+# --- neovim -----------------------------------------------------------------
+
+[[entry]]
+name = "nvim-init"
+platform = "macos"
+mode = "copy"
+source = "neovim/macos/init.lua"
+target = "~/.config/nvim/init.lua"
+
+[[entry]]
+name = "nvim-pack-lock"
+platform = "macos"
+mode = "copy"
+source = "neovim/macos/nvim-pack-lock.json"
+target = "~/.config/nvim/nvim-pack-lock.json"
+
+# --- shell ------------------------------------------------------------------
+
+[[entry]]
+name = "zshrc"
+platform = "macos"
+mode = "copy"
+source = "shell/macos/.zshrc"
+target = "~/.zshrc"
+
+[[entry]]
+name = "zshenv"
+platform = "macos"
+mode = "copy"
+source = "shell/macos/.zshenv"
+target = "~/.zshenv"
+
+[[entry]]
+name = "zprofile"
+platform = "macos"
+mode = "copy"
+source = "shell/macos/.zprofile"
+target = "~/.zprofile"
