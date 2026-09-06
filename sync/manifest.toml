@@ -23,11 +23,32 @@ source = "sysprompt/macos/AGENTS.md"
 target = "~/.pi/agent/AGENTS.md"
 
 [[entry]]
+name = "agents-md-wsl"
+platform = "wsl"
+mode = "link"
+source = "sysprompt/wsl/AGENTS.md"
+target = "~/.pi/agent/AGENTS.md"
+
+[[entry]]
 name = "skill-python-workflow"
 platform = "macos"
 mode = "link"
 source = "skills/macos/python-workflow"
 target = "~/.pi/agent/skills/python-workflow"
+
+[[entry]]
+name = "skill-python-workflow-wsl"
+platform = "wsl"
+mode = "link"
+source = "skills/wsl/python-workflow"
+target = "~/.pi/agent/skills/python-workflow"
+
+[[entry]]
+name = "skill-wsl-remote-access"
+platform = "wsl"
+mode = "link"
+source = "skills/wsl/wsl-remote-access"
+target = "~/.pi/agent/skills/wsl-remote-access"
 
 [[entry]]
 name = "skill-blueprint"
@@ -80,6 +101,20 @@ mode = "copy"
 source = "neovim/macos/nvim-pack-lock.json"
 target = "~/.config/nvim/nvim-pack-lock.json"
 
+[[entry]]
+name = "nvim-init-wsl"
+platform = "wsl"
+mode = "copy"
+source = "neovim/wsl/init.lua"
+target = "~/.config/nvim/init.lua"
+
+[[entry]]
+name = "nvim-pack-lock-wsl"
+platform = "wsl"
+mode = "copy"
+source = "neovim/wsl/nvim-pack-lock.json"
+target = "~/.config/nvim/nvim-pack-lock.json"
+
 # --- shell ------------------------------------------------------------------
 
 [[entry]]
@@ -102,3 +137,17 @@ platform = "macos"
 mode = "copy"
 source = "shell/macos/.zprofile"
 target = "~/.zprofile"
+
+[[entry]]
+name = "bashrc"
+platform = "wsl"
+mode = "copy"
+source = "shell/wsl/.bashrc"
+target = "~/.bashrc"
+
+[[entry]]
+name = "profile"
+platform = "wsl"
+mode = "copy"
+source = "shell/wsl/.profile"
+target = "~/.profile"

@@ -15,6 +15,21 @@ sync/       the sync tool: manifest.toml + sync.py
 secret/     local only, git-ignored
 ```
 
+## Borrowing these configs
+
+This repo is public — feel free to look around and take whatever is
+useful. The most reusable pieces are the pi agent skills under
+`skills/` (both the platform-agnostic ones in `skills/general/` and the
+platform-specific ones) and the AI-harness setup in `sysprompt/`, which
+together show how a global AGENTS.md plus on-demand skills can shape an
+agent's behavior. The `sync/` tool is similarly general: one
+`manifest.toml` mapping repo files to device paths is all it needs.
+
+Anything sensitive (credentials, internal addresses, hostnames) is
+deliberately absent: it lives on each device under `~/.config/secrets/`,
+with the tracked files referring to it by variable name. If you adapt
+these configs, that split is worth keeping.
+
 ## Syncing
 
 `sync/manifest.toml` maps each repo file to its device location. Entries have
