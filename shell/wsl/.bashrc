@@ -92,6 +92,11 @@ alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 
+# nvim is the only editor (mirrors the macOS zshrc aliases)
+alias v=nvim
+alias vi=nvim
+alias vim=nvim
+
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
@@ -142,10 +147,9 @@ winopen() {
 # live outside the repo in a stable XDG location; the repo's git-ignored
 # secret/ folder only holds a backup copy.
 [ -f "$HOME/.config/secrets/windows.sh" ] && source "$HOME/.config/secrets/windows.sh"
+# API keys (e.g. ARK_IMAGE_GEN_API_KEY for the Seedream image-gen skill).
+[ -f "$HOME/.config/secrets/keys.sh" ] && source "$HOME/.config/secrets/keys.sh"
 
-# Skip arkcli's npm postinstall skill distribution; binary downloads and
-# upgrades are handled by ~/code/arkcli-skills/upgrade.sh (see that repo's README)
-export ARKCLI_SKIP_POSTINSTALL=1
 
 # Shared uv-managed venv (Python 3.12) for quick one-off scripts.
 # Manage packages with: uv pip install --python ~/.agents/venv/bin/python <pkg>
@@ -154,4 +158,8 @@ export PATH="$HOME/.agents/venv/bin:$PATH"
 
 # Conda: load the shell function without auto-activating base
 source "$HOME/miniconda3/etc/profile.d/conda.sh"
+
+# User-installed TeX Live 2026 (official installer; managed with tlmgr, never apt).
+# Mirrored in .profile so non-interactive/ssh shells see xelatex too.
+export PATH="$HOME/texlive/2026/bin/x86_64-linux:$PATH"
 

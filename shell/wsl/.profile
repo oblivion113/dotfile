@@ -26,5 +26,11 @@ if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
+# User-installed TeX Live 2026 (official installer; tlmgr-managed, never apt).
+# Here rather than .bashrc so non-interactive login shells (ssh agents) see it.
+if [ -d "$HOME/texlive/2026/bin/x86_64-linux" ] ; then
+    PATH="$HOME/texlive/2026/bin/x86_64-linux:$PATH"
+fi
+
 . "$HOME/.local/bin/env"
 . "$HOME/.cargo/env"

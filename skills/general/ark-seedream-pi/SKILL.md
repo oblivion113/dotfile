@@ -24,7 +24,7 @@ node scripts/generate.js --prompt "一只趴在窗台上的英短蓝猫" \
   --api-key "$(sed -n 's/^export ARK_IMAGE_GEN_API_KEY=//p' ~/.config/secrets/keys.sh)"
 ```
 
-Read the key from the file rather than relying on the environment variable already being set: agent shells are typically non-interactive and do not source `~/.zshrc`, so the variable is usually absent even though it is exported for interactive shells.
+Read the key from the file rather than relying on the environment variable already being set: agent shells are typically non-interactive and do not source the shell rc (`~/.zshrc` / `~/.bashrc`), so the variable is usually absent even though it is exported for interactive shells.
 
 Never pass `--save-api-key`: it writes the key into the config of harnesses such as OpenClaw that do not exist on this machine, which is a wasted write. The key already lives in `~/.config/secrets/keys.sh`; a second persistent copy is unnecessary. Never print the key's value to the user or into files under version control.
 
@@ -59,6 +59,6 @@ Both `--key value` and `--key=value` forms are accepted.
 
 ## Output and saving
 
-Images are saved by default to `~/Desktop/Seedream-Images/<current date>/`, alongside a `seedream_<timestamp>_metadata.json` recording the prompt, parameters, and elapsed time. The script finally prints a JSON result to stdout (containing `images`, `metadata.save_dir`, `metadata.generation_time`); Agents use it to report the save directory and image count to the user. If an individual image fails to download, hand the returned URL to the user for manual download.
+Images are saved by default to `~/Desktop/Seedream-Images/<current date>/` (machines without `~/Desktop`, such as WSL, fall back to `~/Seedream-Images/<date>/`, then `./Seedream-Images/`), alongside a `seedream_<timestamp>_metadata.json` recording the prompt, parameters, and elapsed time. The script finally prints a JSON result to stdout (containing `images`, `metadata.save_dir`, `metadata.generation_time`); Agents use it to report the save directory and image count to the user. If an individual image fails to download, hand the returned URL to the user for manual download.
 
 For troubleshooting, full examples, and the style-preset vocabulary, see `references/`: `EXAMPLES.md` (typical scenarios), `CONFIG.md` (configuration and models), `DEVELOPER.md` (reference-image preprocessing and streaming details).

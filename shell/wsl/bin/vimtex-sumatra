@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# VimTeX forward-search bridge: nvim (WSL) -> SumatraPDF (Windows host).
+#
+# VimTeX calls a g:vimtex_view_general_viewer with: <viewer> @tex @line @pdf
+# (http://... URLs are passed through untouched). SumatraPDF cannot see WSL
+# paths, so convert each local path with `wslpath -w`; -forward-search needs
+# the source .tex first and line second. -reuse-instance keeps one window.
+#
+# Reverse search (PDF -> nvim) is impossible by design: SumatraPDF is a
+# Windows process and cannot send editor commands into a WSL nvim. It is
+# explicitly disabled with an empty 'InverseSearchCmdLine' in
+# %LOCALAPPDATA%/SumatraPDF/SumatraPDF-settings.txt, otherwise double-click
+# falls back to the .tex file association (the WSL VS Code server).
+set -euo pipefail
+
+SUMATRA="${SUMATRA_PDF:-/mnt/c/Users/Yolan/AppData/Local/SumatraPDF/SumatraPDF.exe}"
+
+winpath() {
+  local p="$1"
+  if [[ "$p" == http* || "$p" == \\\\* || "$p" == [A-Za-z]:* ]]; then
+    printf '%s' "$p"
+  else
+    wslpath -w "$p"
+  fi
+}
+
+if [ ! -x "$SUMATRA" ]; then
+  echo "vimtex-sumatra: SumatraPDF.exe not found at $SUMATRA" >&2
+  echo "(set SUMATRA_PDF to override)" >&2
+  exit 1
+fi
+
+tex="$(winpath "$1")"
+line="$2"
+pdf="$(winpath "$3")"
+
+exec "$SUMATRA" -reuse-instance -forward-search "$tex" "$line" "$pdf"

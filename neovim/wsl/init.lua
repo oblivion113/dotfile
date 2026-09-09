@@ -23,6 +23,37 @@ vim.opt.autocomplete = true
 vim.opt.winborder = "rounded"
 vim.opt.showcmd = true
 
+-- VimTeX configuration must be set before the plugin is loaded.
+-- latexmk, continuous + callback. XeLaTeX is the default engine because CJK
+-- documents are first-class here; the engine lives in the *_engines table,
+-- NOT in options — VimTeX otherwise appends its own '-pdf' and overrides it.
+-- Per-file override still works with a % !TEX program = ... magic comment.
+vim.g.vimtex_compiler_method = "latexmk"
+vim.g.vimtex_quickfix_mode = 0
+vim.g.vimtex_compiler_latexmk_engines = {
+  _ = "-xelatex",
+  pdflatex = "-pdf",
+  lualatex = "-lualatex",
+  xelatex = "-xelatex",
+}
+vim.g.vimtex_compiler_latexmk = {
+  callback = 1,
+  continuous = 1,
+  options = {
+    "-verbose",
+    "-file-line-error",
+    "-synctex=1",
+    "-interaction=nonstopmode",
+  },
+}
+-- PDF forward search goes to SumatraPDF on the Windows host through the
+-- ~/bin/vimtex-sumatra interop bridge (the WSL counterpart of macOS Skim).
+-- Reverse search (PDF -> nvim) is impossible across the WSL/Windows boundary.
+vim.g.vimtex_view_method = "general"
+vim.g.vimtex_view_automatic = 1
+vim.g.vimtex_view_general_viewer = vim.fn.expand("~/bin/vimtex-sumatra")
+vim.g.vimtex_view_general_options = "@tex @line @pdf"
+
 vim.pack.add({
 "https://github.com/catppuccin/nvim",
 "https://github.com/nvim-lualine/lualine.nvim",
@@ -36,6 +67,7 @@ vim.pack.add({
 "https://github.com/folke/which-key.nvim",
 "https://github.com/MeanderingProgrammer/render-markdown.nvim",
 "https://github.com/iamcco/markdown-preview.nvim",
+"https://github.com/lervag/vimtex",
 })
 
 require("catppuccin").setup({ flavour = "mocha" })
@@ -106,7 +138,7 @@ ts.setup()
 local ts_parsers = {
   "python", "c", "cpp", "rust", "javascript", "typescript",
   "tsx", "html", "css", "json", "lua", "bash", "markdown",
-  "markdown_inline", "yaml",
+  "markdown_inline", "yaml", "latex", "bibtex",
 }
 
 vim.api.nvim_create_user_command("TSInstallMine", function()
@@ -117,6 +149,7 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = {
     "python", "c", "cpp", "rust", "javascript", "typescript",
     "typescriptreact", "html", "css", "json", "lua", "sh", "bash", "markdown",
+    "tex", "plaintex", "bib",
   },
   callback = function()
     pcall(vim.treesitter.start)
@@ -125,13 +158,30 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "markdown" },
+  pattern = { "markdown", "tex", "plaintex" },
   callback = function()
     vim.opt_local.wrap = true
     vim.opt_local.linebreak = true
     vim.opt_local.spell = true
     vim.opt_local.conceallevel = 2
     vim.opt_local.textwidth = 100
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "tex", "plaintex" },
+  callback = function(event)
+    local map = function(keys, command, description)
+      vim.keymap.set("n", keys, command, { buffer = event.buf, desc = description })
+    end
+
+    map("<leader>lc", "<cmd>VimtexCompile<cr>", "LaTeX: toggle continuous build")
+    map("<leader>lb", "<cmd>VimtexCompileSS<cr>", "LaTeX: build once")
+    map("<leader>lv", "<cmd>VimtexView<cr>", "LaTeX: forward search in PDF")
+    map("<leader>le", "<cmd>VimtexErrors<cr>", "LaTeX: show errors")
+    map("<leader>ls", "<cmd>VimtexStatus<cr>", "LaTeX: compiler status")
+    map("<leader>lk", "<cmd>VimtexStop<cr>", "LaTeX: stop compiler")
+    map("<leader>lx", "<cmd>VimtexClean<cr>", "LaTeX: clean output")
   end,
 })
 
@@ -146,6 +196,9 @@ formatters_by_ft = {
     typescriptreact = { "prettier" },
     html = { "prettier" },
     css = { "prettier" },
+    tex = { "latexindent" },
+    plaintex = { "latexindent" },
+    bib = { "latexindent" },
 },
 })
 
@@ -153,7 +206,24 @@ vim.keymap.set("n", "<leader>cf", function()
 require("conform").format({ async = true })
 end, { desc = "Format buffer" })
 
+vim.lsp.config("texlab", {
+  settings = {
+    texlab = {
+      -- Compilation is owned by VimTeX/latexmk; texlab provides diagnostics only.
+      build = {
+        onSave = false,
+      },
+      chktex = {
+        onOpenAndSave = true,
+        onEdit = true,
+      },
+      -- No forwardSearch here: viewing goes through the VimTeX SumatraPDF bridge.
+    },
+  },
+})
+
 local servers = {
+"texlab",
 "pyright",
 "clangd",
 "rust_analyzer",

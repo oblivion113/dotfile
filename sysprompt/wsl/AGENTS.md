@@ -22,4 +22,6 @@ This WSL distribution holds none of the user's private data, so Agents may use `
 - **JavaScript/TypeScript** — Node.js v24.20.0 via nvm (npm 11.19.0), and Bun 1.4.0 for running one-off TypeScript scripts with zero setup. After installing or upgrading Node with nvm, Agents must also run `nvm alias default <version>`: `nvm install` only activates the version in the current shell, and every new terminal falls back to the default alias — without it, `node` and `npm` vanish from `PATH`.
 - **Rust** — rustup, cargo 1.97.1, clippy, rustfmt.
 - **C/C++** — gcc/g++ 15.2.0, GNU Make 4.4.1, CMake 4.2.3.
+- **TeX** — TeX Live 2026 in `~/texlive`, a user-local install managed with `tlmgr`; Agents extend it with `tlmgr install`, never apt, because the distro packages were removed on purpose. `xelatex`, `latexmk`, `biber`, `chktex`, and `latexindent` are on PATH.
+- **Documents** — pandoc and Poppler (`pdftotext`, `pdfinfo`).
 - **Other tools** — git 2.53, ripgrep, uv 0.12.5.

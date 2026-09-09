@@ -51,6 +51,13 @@ source = "skills/wsl/wsl-remote-access"
 target = "~/.pi/agent/skills/wsl-remote-access"
 
 [[entry]]
+name = "skill-ark-seedream"
+platform = "all"
+mode = "link"
+source = "skills/general/ark-seedream-pi"
+target = "~/.pi/agent/skills/ark-seedream-pi"
+
+[[entry]]
 name = "skill-blueprint"
 platform = "all"
 mode = "link"
@@ -158,3 +165,10 @@ platform = "wsl"
 mode = "copy"
 source = "shell/wsl/.profile"
 target = "~/.profile"
+
+[[entry]]
+name = "vimtex-sumatra"
+platform = "wsl"
+mode = "copy"
+source = "shell/wsl/bin/vimtex-sumatra"
+target = "~/bin/vimtex-sumatra"
