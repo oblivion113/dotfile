@@ -1,0 +1,9 @@
+{
+  "name": "ark-seedream-pi",
+  "version": "3.0.0",
+  "description": "Doubao Seedream AI image generation skill - VolcEngine Ark Agent Plan edition",
+  "main": "scripts/generate.js",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
