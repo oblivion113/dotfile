@@ -25,9 +25,12 @@ vim.opt.showcmd = true
 
 -- VimTeX configuration must be set before the plugin is loaded.
 vim.g.vimtex_view_method = "skim"
+vim.g.vimtex_view_automatic = 1
 vim.g.vimtex_compiler_method = "latexmk"
 vim.g.vimtex_quickfix_mode = 0
 vim.g.vimtex_compiler_latexmk = {
+  callback = 1,
+  continuous = 1,
   options = {
     "-verbose",
     "-file-line-error",
@@ -154,8 +157,9 @@ vim.api.nvim_create_autocmd("FileType", {
       vim.keymap.set("n", keys, command, { buffer = event.buf, desc = description })
     end
 
-    map("<leader>lc", "<cmd>VimtexCompile<cr>", "LaTeX: compile/watch")
-    map("<leader>lv", "<cmd>VimtexView<cr>", "LaTeX: view PDF")
+    map("<leader>lc", "<cmd>VimtexCompile<cr>", "LaTeX: toggle continuous build")
+    map("<leader>lb", "<cmd>VimtexCompileSS<cr>", "LaTeX: build once")
+    map("<leader>lv", "<cmd>VimtexView<cr>", "LaTeX: view PDF at cursor")
     map("<leader>le", "<cmd>VimtexErrors<cr>", "LaTeX: show errors")
     map("<leader>ls", "<cmd>VimtexStatus<cr>", "LaTeX: compiler status")
     map("<leader>lk", "<cmd>VimtexStop<cr>", "LaTeX: stop compiler")
