@@ -62,4 +62,6 @@ They must be sourced because a child process cannot export variables into the ca
 - `tailscale status` — both nodes should appear; `tailscale ping <MAC_HOSTNAME>` should pong.
 - `systemctl status ssh tailscaled` — both active.
 - If the Mac cannot reach the WSL node IP at all, check the Tailscale admin console: the node may have been deleted or key expiry re-enabled.
-- If `proxy-on` reports no proxy, the Windows proxy app is off or "Allow LAN" got disabled.
+- If `proxy-on` reports no proxy, the Windows proxy app is off or "Allow LAN" got disabled. Verify from WSL via interop: `/mnt/c/Windows/System32/netstat.exe -ano | grep -E ':(7892|10808).*LISTENING'` — the listener must be `0.0.0.0:<port>`, not `127.0.0.1:<port>`.
+- Toggling "Allow LAN" in the app UI only writes the config; the mihomo/v2ray core binds its socket at startup, so the running core keeps listening on `127.0.0.1` until the app is **fully quit (tray → Exit) and restarted** — just closing the window or toggling the switch does not rebind.
+- The current Windows proxy app is **BoostNet** (mihomo core, mixed port 7892; config in `C:\Users\Yolan\AppData\Roaming\BoostNet\BoostNet\`, `shared_preferences.json` holds `allow-lan`/`mixed-port`). A silent timeout (SYN dropped, not refused) after the listener is on `0.0.0.0` points to the Windows firewall blocking the WSL vEthernet subnet.
