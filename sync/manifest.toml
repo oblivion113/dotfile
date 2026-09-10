@@ -153,6 +153,27 @@ source = "shell/macos/.zprofile"
 target = "~/.zprofile"
 
 [[entry]]
+name = "condarc"
+platform = "macos"
+mode = "copy"
+source = "shell/macos/.condarc"
+target = "~/.condarc"
+
+[[entry]]
+name = "fzf-config"
+platform = "macos"
+mode = "copy"
+source = "shell/macos/.config/fzf/fzfrc"
+target = "~/.config/fzf/fzfrc"
+
+[[entry]]
+name = "search-ignore"
+platform = "macos"
+mode = "copy"
+source = "shell/macos/.config/search/ignore"
+target = "~/.config/search/ignore"
+
+[[entry]]
 name = "bashrc"
 platform = "wsl"
 mode = "copy"

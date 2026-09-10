@@ -8,7 +8,7 @@ everywhere.
 
 ```
 neovim/     Neovim configuration (init.lua, nvim-pack-lock.json)
-shell/      zsh startup files (.zshrc, .zshenv, .zprofile)
+shell/      shell startup files and tool configuration
 skills/     Agent skills for pi
 sysprompt/  global AGENTS.md
 sync/       the sync tool: manifest.toml + sync.py
@@ -26,9 +26,38 @@ agent's behavior. The `sync/` tool is similarly general: one
 `manifest.toml` mapping repo files to device paths is all it needs.
 
 Anything sensitive (credentials, internal addresses, hostnames) is
-deliberately absent: it lives on each device under `~/.config/secrets/`,
-with the tracked files referring to it by variable name. If you adapt
-these configs, that split is worth keeping.
+excluded from version control. If you adapt these configs, keep that split.
+
+## macOS shell setup
+
+The macOS zsh files initialize tools from their normal startup locations:
+Homebrew and Cargo set `PATH`, while fzf, zoxide, Starship, Conda, and The Fuck
+install their shell integration in `.zshrc`. The tracked auxiliary files mirror
+their paths under the home directory:
+
+- `shell/macos/.config/fzf/fzfrc` controls fzf's layout and display.
+- `shell/macos/.config/search/ignore` is the shared ignore list used by the
+  fzf `fd` commands.
+- `shell/macos/.condarc` disables automatic activation of Conda's base
+  environment.
+
+## Local secrets
+
+### MacOS
+
+`secret/` is a local backup area excluded by `.gitignore` and absent from the
+sync manifest. On this Mac, `secret/macos/keys.sh` backs up the live
+`~/.config/secrets/keys.sh`; both files have mode `0600`, and the live directory
+has mode `0700`. The file currently defines `CONTEXT7_API_KEY` and
+`ARK_IMAGE_GEN_API_KEY`. Keep values out of tracked files, command output, and
+documentation.
+
+Interactive zsh sources the live file near the end of `.zshrc`. A
+non-interactive shell inherits keys only when its parent already exported them;
+it does not read `.zshrc` itself. For predictable automation, source the live
+file in the command before using a key and never echo the value. The repository
+backup is manual: when changing a key, update both copies and retain mode
+`0600`.
 
 ## Syncing
 
