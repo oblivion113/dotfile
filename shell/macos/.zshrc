@@ -14,9 +14,6 @@ pt() {
 # Homebrew
 eval "$(/opt/homebrew/bin/brew shellenv zsh)"
 
-# Personal shell scripts
-export PATH="$HOME/code/shutils:$PATH"
-
 # Roundtable UI shortcut
 rtui() {
     conda activate roundtable && roundtable-ui
