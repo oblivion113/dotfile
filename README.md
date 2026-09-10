@@ -8,9 +8,9 @@ everywhere.
 
 ```
 neovim/     Neovim configuration (init.lua, nvim-pack-lock.json)
-shell/      shell startup files and tool configuration
-skills/     Agent skills for pi
-sysprompt/  global AGENTS.md
+shell/      zsh startup files and tool configuration: common/, macos/, wsl/
+skills/     Agent skills for pi (general/ plus platform-specific ones)
+sysprompt/  global AGENTS.md: macos/, wsl/
 sync/       the sync tool: manifest.toml + sync.py
 secret/     local only, git-ignored
 ```
@@ -28,36 +28,44 @@ agent's behavior. The `sync/` tool is similarly general: one
 Anything sensitive (credentials, internal addresses, hostnames) is
 excluded from version control. If you adapt these configs, keep that split.
 
-## macOS shell setup
+## Shell setup
 
-The macOS zsh files initialize tools from their normal startup locations:
-Homebrew and Cargo set `PATH`, while fzf, zoxide, Starship, Conda, and The Fuck
-install their shell integration in `.zshrc`. The tracked auxiliary files mirror
-their paths under the home directory:
+Both machines run zsh. Startup files are split into:
 
-- `shell/macos/.config/fzf/fzfrc` controls fzf's layout and display.
-- `shell/macos/.config/search/ignore` is the shared ignore list used by the
-  fzf `fd` commands.
-- `shell/macos/.condarc` disables automatic activation of Conda's base
-  environment.
+- `shell/common/` — everything OS-independent, installed at the same device
+  path on every machine: `zsh/common.zsh` (fzf, zoxide, Starship, Conda,
+  The Fuck, nvim aliases, the shared agent venv, and key sourcing), the fzf
+  config at `.config/fzf/fzfrc`, the fzf/`fd` ignore list at
+  `.config/search/ignore`, and `.condarc` (base auto-activation off). Each
+  platform's `.zshrc` sources the shared fragment, so tool integration is
+  written once.
+- `shell/macos/` and `shell/wsl/` — platform `.zshrc`/`.zshenv`/`.zprofile`
+  and platform-only helpers (Homebrew and the `rtui` shortcut on macOS;
+  `winopen`, nvm, and TeX/Cargo PATH setup on WSL).
+
+All shell files are **copy** entries: the live copies under `~` are real
+files the shell reads directly, while the repo holds the backup and is not
+special at runtime (only skills and `AGENTS.md` are symlinked). After editing
+a live file, `push` it; on another machine, `pull` to receive the update.
 
 ## Local secrets
 
-### MacOS
-
 `secret/` is a local backup area excluded by `.gitignore` and absent from the
-sync manifest. On this Mac, `secret/macos/keys.sh` backs up the live
-`~/.config/secrets/keys.sh`; both files have mode `0600`, and the live directory
-has mode `0700`. The file currently defines `CONTEXT7_API_KEY` and
-`ARK_IMAGE_GEN_API_KEY`. Keep values out of tracked files, command output, and
-documentation.
+sync manifest. On every machine the live secrets live in `~/.config/secrets/`
+(directory mode `0700`, files mode `0600`), with a manual backup under
+`secret/<platform>/` in the repo clone:
 
-Interactive zsh sources the live file near the end of `.zshrc`. A
-non-interactive shell inherits keys only when its parent already exported them;
-it does not read `.zshrc` itself. For predictable automation, source the live
-file in the command before using a key and never echo the value. The repository
-backup is manual: when changing a key, update both copies and retain mode
-`0600`.
+- **macOS:** `keys.sh` backs up `~/.config/secrets/keys.sh` (currently
+  `CONTEXT7_API_KEY`, `ARK_IMAGE_GEN_API_KEY`).
+- **WSL:** `secret/wsl/keys.sh` (`ARK_IMAGE_GEN_API_KEY`), plus `windows.sh`
+  (Windows host details such as `$WIN`), `sudo-password`, and `tailscale`
+  (node IPs for the remote-access skill). Only `keys.sh` is sourced by the
+  shared zsh fragment; `windows.sh` is sourced from the WSL `.zshrc`.
+
+Keep values out of tracked files, command output, and documentation. When
+changing a secret, update both the live file and the backup and retain mode
+`0600`. A non-interactive shell only inherits keys its parent already
+exported, so source the live file explicitly in automation and never echo it.
 
 ## Syncing
 

@@ -31,16 +31,9 @@ target = "~/.pi/agent/AGENTS.md"
 
 [[entry]]
 name = "skill-python-workflow"
-platform = "macos"
+platform = "all"
 mode = "link"
-source = "skills/macos/python-workflow"
-target = "~/.pi/agent/skills/python-workflow"
-
-[[entry]]
-name = "skill-python-workflow-wsl"
-platform = "wsl"
-mode = "link"
-source = "skills/wsl/python-workflow"
+source = "skills/general/python-workflow"
 target = "~/.pi/agent/skills/python-workflow"
 
 [[entry]]
@@ -131,6 +124,38 @@ target = "~/.config/nvim/nvim-pack-lock.json"
 
 # --- shell ------------------------------------------------------------------
 
+# --- shared interactive-zsh fragment and tool config (both platforms) -------
+
+[[entry]]
+name = "zsh-common"
+platform = "all"
+mode = "copy"
+source = "shell/common/zsh/common.zsh"
+target = "~/.config/zsh/common.zsh"
+
+[[entry]]
+name = "condarc"
+platform = "all"
+mode = "copy"
+source = "shell/common/.condarc"
+target = "~/.condarc"
+
+[[entry]]
+name = "fzf-config"
+platform = "all"
+mode = "copy"
+source = "shell/common/.config/fzf/fzfrc"
+target = "~/.config/fzf/fzfrc"
+
+[[entry]]
+name = "search-ignore"
+platform = "all"
+mode = "copy"
+source = "shell/common/.config/search/ignore"
+target = "~/.config/search/ignore"
+
+# --- macOS shell ------------------------------------------------------------
+
 [[entry]]
 name = "zshrc"
 platform = "macos"
@@ -152,40 +177,28 @@ mode = "copy"
 source = "shell/macos/.zprofile"
 target = "~/.zprofile"
 
-[[entry]]
-name = "condarc"
-platform = "macos"
-mode = "copy"
-source = "shell/macos/.condarc"
-target = "~/.condarc"
+# --- WSL shell --------------------------------------------------------------
 
 [[entry]]
-name = "fzf-config"
-platform = "macos"
-mode = "copy"
-source = "shell/macos/.config/fzf/fzfrc"
-target = "~/.config/fzf/fzfrc"
-
-[[entry]]
-name = "search-ignore"
-platform = "macos"
-mode = "copy"
-source = "shell/macos/.config/search/ignore"
-target = "~/.config/search/ignore"
-
-[[entry]]
-name = "bashrc"
+name = "zshrc-wsl"
 platform = "wsl"
 mode = "copy"
-source = "shell/wsl/.bashrc"
-target = "~/.bashrc"
+source = "shell/wsl/.zshrc"
+target = "~/.zshrc"
 
 [[entry]]
-name = "profile"
+name = "zshenv-wsl"
 platform = "wsl"
 mode = "copy"
-source = "shell/wsl/.profile"
-target = "~/.profile"
+source = "shell/wsl/.zshenv"
+target = "~/.zshenv"
+
+[[entry]]
+name = "zprofile-wsl"
+platform = "wsl"
+mode = "copy"
+source = "shell/wsl/.zprofile"
+target = "~/.zprofile"
 
 [[entry]]
 name = "vimtex-sumatra"
