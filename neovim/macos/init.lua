@@ -20,15 +20,6 @@ vim.g.vimtex_compiler_latexmk = {
 }
 vim.g.vimtex_lv_desc = "LaTeX: view PDF at cursor"
 
--- texlab: Skim handles forward search on macOS; build/lint chktex settings
--- stay on every machine and live in shared/init.lua.
-
--- ripgrep follows the shared ~/.config/search/ignore policy; macOS
--- provisions this file via the zsh sync. Exported as a global so the
--- shared layer (loaded via dofile) can read it.
-local search_ignore = vim.fn.shellescape(vim.fn.expand("~/.config/search/ignore"))
-_G.rg_excludes = "--ignore-file " .. search_ignore
-
 -- Pull in every platform-agnostic plugin, setup, and keymap.
 dofile(vim.fn.stdpath("config") .. "/shared/init.lua")
 

@@ -1,7 +1,7 @@
 -- Shared Neovim configuration: every line that is byte-identical on macOS
--- and WSL lives here. Platform-specific behaviour (VimTeX viewer, latexmk
--- engines, ripgrep exclude rules) is set BEFORE this file is loaded by
--- the platform init.lua, so the setup()s below see the correct context.
+-- and WSL lives here. Genuinely platform-specific behaviour (VimTeX viewer,
+-- latexmk engines) is set BEFORE this file is loaded by the platform
+-- init.lua, so the setup()s below see the correct context.
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
@@ -28,11 +28,8 @@ vim.opt.autocomplete = true
 vim.opt.winborder = "rounded"
 vim.opt.showcmd = true
 
--- Plugin set is identical on both machines. The platform init.lua is
--- expected to set the global `rg_excludes` (a string of ripgrep flags)
--- before requiring this shared layer: macOS uses the shared
--- ~/.config/search/ignore list, WSL inlines a few globs because the
--- ignore file is not yet provisioned there.
+-- Plugin set is identical on both machines, so versions are pinned once in
+-- the shared nvim-pack-lock.json next to this file.
 vim.pack.add({
 "https://github.com/catppuccin/nvim",
 "https://github.com/nvim-lualine/lualine.nvim",
@@ -59,6 +56,12 @@ options = {
     globalstatus = true,
 },
 })
+
+-- ripgrep follows the shared ~/.config/search/ignore policy on both
+-- machines (provisioned everywhere by the shell sync), so nvim's file
+-- finder and grep agree with the terminal fzf/fd setup.
+local rg_excludes = "--ignore-file "
+  .. vim.fn.shellescape(vim.fn.expand("~/.config/search/ignore"))
 
 require("fzf-lua").setup({
   files = {

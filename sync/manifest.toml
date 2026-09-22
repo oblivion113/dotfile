@@ -95,7 +95,9 @@ target = "~/.pi/agent/skills/konmari"
 # --- neovim -----------------------------------------------------------------
 
 # Both platforms load a shared init.lua living under ~/.config/nvim/, so
-# platform init.lua can dofile() it through stdpath('config').
+# platform init.lua can dofile() it through stdpath('config'). The pack lock
+# is likewise shared: the plugin set is single-source in shared/init.lua, so
+# its versions are pinned once, in one file.
 
 [[entry]]
 name = "nvim-shared"
@@ -105,6 +107,13 @@ source = "neovim/shared/init.lua"
 target = "~/.config/nvim/shared/init.lua"
 
 [[entry]]
+name = "nvim-pack-lock"
+platform = "all"
+mode = "copy"
+source = "neovim/shared/nvim-pack-lock.json"
+target = "~/.config/nvim/nvim-pack-lock.json"
+
+[[entry]]
 name = "nvim-init"
 platform = "macos"
 mode = "copy"
@@ -112,25 +121,11 @@ source = "neovim/macos/init.lua"
 target = "~/.config/nvim/init.lua"
 
 [[entry]]
-name = "nvim-pack-lock"
-platform = "macos"
-mode = "copy"
-source = "neovim/macos/nvim-pack-lock.json"
-target = "~/.config/nvim/nvim-pack-lock.json"
-
-[[entry]]
 name = "nvim-init-wsl"
 platform = "wsl"
 mode = "copy"
 source = "neovim/wsl/init.lua"
 target = "~/.config/nvim/init.lua"
-
-[[entry]]
-name = "nvim-pack-lock-wsl"
-platform = "wsl"
-mode = "copy"
-source = "neovim/wsl/nvim-pack-lock.json"
-target = "~/.config/nvim/nvim-pack-lock.json"
 
 # --- shell ------------------------------------------------------------------
 

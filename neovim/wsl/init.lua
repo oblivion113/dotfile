@@ -35,14 +35,5 @@ vim.g.vimtex_view_general_viewer = vim.fn.expand("~/bin/vimtex-sumatra")
 vim.g.vimtex_view_general_options = "@tex @line @pdf"
 vim.g.vimtex_lv_desc = "LaTeX: forward search in PDF"
 
--- ripgrep: WSL does not yet provision ~/.config/search/ignore, so the few
--- noise-heavy paths get inlined as globs. Exported as a global so the
--- shared layer (loaded via dofile) can read it.
-_G.rg_excludes = table.concat({
-  '--glob "!**/.git/**"',
-  '--glob "!miniconda3/**"',
-  '--glob "!**/node_modules/**"',
-}, " ")
-
 -- Pull in every platform-agnostic plugin, setup, and keymap.
 dofile(vim.fn.stdpath("config") .. "/shared/init.lua")
