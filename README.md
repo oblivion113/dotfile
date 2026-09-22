@@ -107,3 +107,44 @@ Configuration bodies live in this repository; the device sees them through
 repo, never through the symlinks' targets. After moving files within the repo,
 run `sync.py refresh` and `sync.py relink`, and keep `manifest.toml` in the
 same commit as the move.
+
+### Sync direction — how to know which side is newer
+
+`sync.py push` and `pull` are bidirectional: they copy whichever file is the
+newer source of truth to the other side. **They are not always the right
+choice** — the wrong direction silently overwrites work.
+
+**Rule: use file mtimes to decide, and check twice when the file is shared.**
+
+1. **Check both sides' mtimes first.** The side with the *newer* mtime is
+   almost always the source of truth.
+   - `ls -l ~/.config/nvim/init.lua` (device) vs `ls -l
+     neovim/macos/init.lua` (repo)
+   - The newer one should be pushed (device → repo) or pulled (repo → device).
+
+2. **If the file is shared** (`shared/`, `shell/common/`, or any config that
+   both machines read) — **the mtime rule still applies**, but be extra
+   careful. A shared file's drift affects both machines at once.
+
+3. **If the file is platform-specific** (`macos/` or `wsl/`) — the mtime rule
+   applies, but only consider the machine that actually runs that platform.
+   Pushing a macOS-side mtime onto a WSL-only file is wrong.
+
+4. **When in doubt, ask the user.** If mtimes are equal, if the file was
+   edited by a background process, or if the diff looks "backwards" (the
+   repo has something the device doesn't, or vice versa), stop and ask.
+   The cost of asking is low; the cost of overwriting the wrong side is high.
+
+**Example of getting it wrong:**
+
+```
+# BAD: device has aerial.nvim installed, repo does not.
+# Running `push` overwrites the repo with "no aerial", losing the config.
+# The correct action was `pull` (repo → device), because the repo had
+# the newer, shared config.
+
+# GOOD: check mtimes first, then choose the right direction.
+ls -l ~/.config/nvim/init.lua     # Sep 16 08:53
+ls -l neovim/macos/init.lua       # Sep  9 04:24
+# Device is newer → push
+```
