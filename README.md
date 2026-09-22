@@ -7,7 +7,10 @@ platform-specific files, while `skills/general/` holds whatever works
 everywhere.
 
 ```
-neovim/     Neovim configuration (init.lua, nvim-pack-lock.json)
+neovim/     Neovim configuration: shared/ (one source of truth for plugins
+            and setups identical on both machines) plus macos/ and wsl/
+            for the platform-specific bits; each platform ships its own
+            nvim-pack-lock.json
 shell/      zsh startup files and tool configuration: common/, macos/, wsl/
 skills/     Agent skills for pi (general/ plus platform-specific ones)
 sysprompt/  global AGENTS.md: macos/, wsl/

@@ -94,6 +94,16 @@ target = "~/.pi/agent/skills/konmari"
 
 # --- neovim -----------------------------------------------------------------
 
+# Both platforms load a shared init.lua living under ~/.config/nvim/, so
+# platform init.lua can dofile() it through stdpath('config').
+
+[[entry]]
+name = "nvim-shared"
+platform = "all"
+mode = "link"
+source = "neovim/shared/init.lua"
+target = "~/.config/nvim/shared/init.lua"
+
 [[entry]]
 name = "nvim-init"
 platform = "macos"
